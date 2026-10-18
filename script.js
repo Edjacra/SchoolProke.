@@ -11,9 +11,34 @@
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navMenu');
   if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-      hamburger.classList.toggle('open');
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
+      if (!isOpen) {
+        document.querySelectorAll('.has-dropdown.open').forEach((el) => el.classList.remove('open'));
+      }
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+        navMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.querySelectorAll('.has-dropdown.open').forEach((el) => el.classList.remove('open'));
+      }
+    });
+
+    // Close mobile menu on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navMenu.classList.contains('open')) {
+        navMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.querySelectorAll('.has-dropdown.open').forEach((el) => el.classList.remove('open'));
+      }
     });
   }
 
@@ -83,7 +108,11 @@
     link.addEventListener('click', () => {
       if (navMenu && navMenu.classList.contains('open')) {
         navMenu.classList.remove('open');
-        hamburger.classList.remove('open');
+        if (hamburger) {
+          hamburger.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        }
+        document.querySelectorAll('.has-dropdown.open').forEach((el) => el.classList.remove('open'));
       }
     });
   });
@@ -128,7 +157,7 @@
     tab.addEventListener('click', () => activateRole(tab.dataset.role));
   });
 
-  // Allow header links like index.html#roles?role=teachers to preselect a tab
+  // Allow header links like /#roles?role=teachers or /for-roles/?role=teachers to preselect a tab
   function applyRoleFromHash() {
     const params = new URLSearchParams(window.location.search);
     const role = params.get('role');

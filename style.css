@@ -511,6 +511,19 @@ button {
   transition: all 0.25s ease;
 }
 
+.hamburger.open .bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.open .bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger.open .bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 /* ===================================================================
    Hero Section
    =================================================================== */
@@ -2140,6 +2153,8 @@ button {
   .contact-form { padding: 24px; }
   .contact-shortcuts { flex-direction: column; }
   .price-card { padding: 28px 24px; }
+  .legal-trust-banner { flex-direction: column; padding: 22px 20px; gap: 16px; }
+  .legal-card { padding: 22px 20px; gap: 16px; }
 
   .whatsapp-float { width: 52px; height: 52px; bottom: 20px; right: 20px; font-size: 1.4rem; }
 }
